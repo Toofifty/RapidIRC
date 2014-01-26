@@ -1,0 +1,8 @@
+author: Toofifty
+database: false
+description: Connects the Rapid server to IRC
+main: me.toofifty.plugins.rapidirc.RapidIRC
+name: RapidIRC
+startup: startup
+url: http://rapidcraftmc.com/
+version: '0.1'

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="pircbot-1.5.0/pircbot.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/Alex/Desktop/plugin-RapidIRC-0.1/RapidIRC/pircbot-1.5.0/javadocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/dev server/bukkit.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
