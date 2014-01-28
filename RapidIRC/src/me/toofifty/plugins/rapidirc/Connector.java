@@ -7,9 +7,12 @@ import org.jibble.pircbot.*;
 public class Connector extends PircBot {
 
 	//Constructor
-	public Connector(String name){
-	setName(name); 
+	public Connector(){
 
+	}
+	
+	public void makeBot(String name) {
+		setName(name); 
 	}
 	
 	public void sendIRCMessage(String channel, String msg){
@@ -18,9 +21,7 @@ public class Connector extends PircBot {
 	}
 	
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.sendMessage("[IRC]<" + sender + "> " + message);
-		}
+		Bukkit.broadcastMessage("[IRC]<" + sender + "> " + message);
 	}
 	
 	public void onNotice(String sourceNick, String sourceLogin, String sourceHostname, String target, String notice) {

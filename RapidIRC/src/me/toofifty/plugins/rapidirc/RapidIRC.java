@@ -15,23 +15,33 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class RapidIRC extends JavaPlugin {
 
-	private Connector playerbot;
+	private static Connector playerbot;
+	
+	public void loadConfiguration() {
+		getConfig().addDefault("Username", "RapidIRC");
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+	}
+	
+	public void onEnable() {
+		new RapidIRCListener(this);
+		loadConfiguration();
+		getServer().getPluginManager().registerEvents(new RapidIRCListener(this), this);
+    	this.setPlayerbot(new Connector());
+	}
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        getLogger().info("New thingy made");
-        this.playerbot.disconnect();
+        this.getPlayerbot().disconnect();
     }
     
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-    	this.playerbot.sendIRCMessage("#rapidcraft", event.getMessage());
+    	this.getPlayerbot().sendIRCMessage("#rapidcraft", event.getMessage());
     }
     
     public void onIRCChat(String user, String msg) {
-    	for (Player player : Bukkit.getOnlinePlayers()) {
-    		player.sendMessage("[IRC]<" + user + "> " + msg);
-    	}
+		Bukkit.broadcastMessage("[IRC]<" + user + "> " + msg);
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
@@ -41,40 +51,12 @@ public class RapidIRC extends JavaPlugin {
     	}
     	return false;
     }
-}
 
-class IRCListener implements Listener {
-	
-	private final RapidIRC plugin;
-	
-	public IRCListener(RapidIRC plugin) {
-		this.plugin = plugin;
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	public static Connector getPlayerbot() {
+		return playerbot;
 	}
-	
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        // Create the task anonymously and schedule to run once in 20 ticks.
-    	new BukkitRunnable {
-    		
-    		@Override
-    		public void run() {
-    	    	this.playerbot = new Connector(event.getPlayer().getDisplayName());
-    			
-    		}
-    		
-    	}.runTaskLater(this.plugin, 20);
-/*
-    	try {
-    		playerbot.setVerbose(true);
-    		playerbot.connect("irc.esper.net");
-	    	//bot.sendMessage("nickserv","IDENTIFY <your password>" );
-    		playerbot.joinChannel("#rapidcraft");
-    		playerbot.sendRawMessage("#rapidcraft", "/me is connecting from the Rapid server.");
-    	} catch (Exception e) {
-    		e.printStackTrace();
-		}*/
-    }
 
-	
+	public void setPlayerbot(Connector playerbot) {
+		this.playerbot = playerbot;
+	}
 }
