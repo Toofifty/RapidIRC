@@ -7,6 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Alex/Desktop/dev server/bukkit.jar"/>
+	<classpathentry kind="lib" path="/home/jake/libs/bukkit/bukkit-1.7.2-R0.3-20140116.065934-9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
