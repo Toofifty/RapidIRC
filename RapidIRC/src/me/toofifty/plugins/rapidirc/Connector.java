@@ -29,8 +29,12 @@ public class Connector extends PircBot {
 		Player p = Bukkit.getPlayer(words[0]);
 		if (p != null) {
 			message = message.replace(words[0] + " ", "");
-			p.sendMessage("[IRC]-" + sender + "- " + message);
-			p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
+			if (!sender.equals("Oracle")) {
+				p.sendMessage("[IRC]-" + sender + "- " + message);
+				p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
+			} else {
+				p.sendMessage("- " + message);
+			}
 			done = true;
 		}
 		if (!done) {
