@@ -5,4 +5,38 @@ main: me.toofifty.plugins.rapidirc.RapidIRC
 name: RapidIRC
 startup: startup
 url: http://rapidcraftmc.com/
-version: '0.1'
+version: 0.2
+
+commands:
+    irc:
+        description: Basic RapidIRC commands
+        usage: /irc
+        permission: rapidirc.irc
+        permission-message: You don't have permission for that.
+    imsg:
+        description: RapidIRC private messaging
+        usage: /imsg [nick] [message...]
+        permission: rapidirc.imsg
+        permission-message: You don't have permission for that.
+    ircop:
+        description: OP RapidIRC commands
+        usage: /ircop
+        permission: rapidirc.ircop
+        permission-message: You don't have permission for that.
+        
+permissions:
+    rapidirc.*:
+        description: Gives access to all commands
+        children:
+            rapidirc.irc
+            rapidirc.imsg
+            rapidirc.ircop
+    rapidirc.irc:
+        description: Basic RapidIRC commands
+        default: op
+    rapidirc.imsg:
+        description: RapidIRC private messaging
+        default: op
+    rapidirc.ircop:
+        description: OP RapidIRC commands
+        default: op

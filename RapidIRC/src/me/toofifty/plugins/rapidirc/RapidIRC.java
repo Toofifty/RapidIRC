@@ -11,12 +11,18 @@ import org.jibble.pircbot.NickAlreadyInUseException;
 public class RapidIRC extends JavaPlugin {
 
 	public static Connector bot;
+	public static String channel;
+	public static String server;
+	public static String nick;
 
 	public void loadConfiguration() {
 		getConfig().addDefault("Username", "RapidIRC");
 		getConfig().addDefault("Server", "irc.esper.net");
 		getConfig().addDefault("Channel", "#rapidcraft");
 		getConfig().options().copyDefaults(true);
+		nick = getConfig().getString("Username");
+		server = getConfig().getString("Server");
+		channel = getConfig().getString("Channel");
 		saveConfig();
 	}
 
@@ -34,9 +40,9 @@ public class RapidIRC extends JavaPlugin {
 	public void createBot() {
 		try {
 			bot.setVerbose(true);
-			bot.makeBot(getConfig().getString("Username"));
-			bot.connect("irc.esper.net");
-			bot.joinChannel("#rapidcraft");
+			bot.makeBot(nick);
+			bot.connect(server);
+			bot.joinChannel(channel);
 			// bot.sendMessage("nickserv", "IDENTIFY <your password>");
 		} catch (NickAlreadyInUseException e) {
 			// TODO Auto-generated catch block
@@ -54,6 +60,17 @@ public class RapidIRC extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("irc")) {
 			// irc commands
+			return true;
+		} else if (cmd.getName().equalsIgnoreCase("imsg")) {
+			String msg = "";
+			for (String word : args) {
+				msg += word + " ";
+			}
+			String target = args[0];
+			msg = msg.replace(args[0] + " ", "");
+			bot.sendPrivateMessage(target, sender.getName(), msg);
+			return true;
+		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
 			return true;
 		}
 		return false;
