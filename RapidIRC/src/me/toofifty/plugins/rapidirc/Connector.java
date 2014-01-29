@@ -15,7 +15,11 @@ public class Connector extends PircBot {
 	}
 
 	public void sendPrivateMessage(String user, String sender, String msg) {
-		sendMessage(user, sender + " whispers " + msg);
+		if (user.equals("Oracle")) {
+			sendMessage(user, "<" + sender + "> " + msg);
+		} else {
+			sendMessage(user, sender + " whispers " + msg);
+		}
 		Bukkit.getPlayer(sender).sendMessage("[" + sender + "->" + user + "(IRC)] " + msg);
 	}
 
@@ -32,6 +36,7 @@ public class Connector extends PircBot {
 			if (!sender.equals("Oracle")) {
 				p.sendMessage("[IRC]-" + sender + "- " + message);
 				p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
+				sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + message);
 			} else {
 				p.sendMessage("- " + message);
 			}
@@ -39,8 +44,6 @@ public class Connector extends PircBot {
 		}
 		if (!done) {
 			sendMessage(sender, "Message not received by " + words[0] + ".");
-		} else {
-			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + message);
 		}
 	}
 
