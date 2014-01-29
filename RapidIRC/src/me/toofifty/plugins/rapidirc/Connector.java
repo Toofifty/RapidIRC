@@ -11,16 +11,16 @@ public class Connector extends PircBot {
 	}
 
 	public void sendIRCMessage(String msg) {
-		sendMessage(RapidIRC.channel, msg);
+		sendMessage(RapidIRC.channel, ColorMap.toIrc(msg));
 	}
 
 	public void sendPrivateMessage(String user, String sender, String msg) {
-		sendMessage(user, sender + " whispers " + msg);
+		sendMessage(user, sender + " whispers " + ColorMap.toIrc(msg));
 		Bukkit.getPlayer(sender).sendMessage("[" + sender + "->" + user + "(IRC)] " + msg);
 	}
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
-		Bukkit.broadcastMessage("[IRC] <" + sender + "> " + message);
+		Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.fromIrc(message));
 	}
 	
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {		
@@ -33,15 +33,22 @@ public class Connector extends PircBot {
 				p.sendMessage("[IRC]-" + sender + "- " + message);
 				p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
 			} else {
-				p.sendMessage("- " + message);
+				p.sendMessage("- " + ColorMap.fromIrc(message));
 			}
 			done = true;
 		}
 		if (!done) {
 			sendMessage(sender, "Message not received by " + words[0] + ".");
 		} else {
-			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + message);
+			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.toIrc(message));
 		}
 	}
 
+	public void onJoin(String channel, String sender, String login, String hostname) {
+		Bukkit.broadcastMessage("[IRC] " + login + " has joined");
+	}
+	
+	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason)  {
+		Bukkit.broadcastMessage("[IRC] " + sourceLogin + " has left (" + reason + ")");
+	}
 }

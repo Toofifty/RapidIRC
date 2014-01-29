@@ -22,12 +22,12 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
-		RapidIRC.bot.sendIRCMessage("<" + event.getPlayer().getDisplayName() + "> " + ChatColor.stripColor(event.getMessage()));
+		RapidIRC.bot.sendIRCMessage("<" + event.getPlayer().getDisplayName() + "> " + event.getMessage());
 	}
 	
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
-		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getDeathMessage()));
+		RapidIRC.bot.sendIRCMessage(event.getDeathMessage());
 	}
 
 }

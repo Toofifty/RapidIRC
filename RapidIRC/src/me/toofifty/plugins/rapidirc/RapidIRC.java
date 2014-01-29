@@ -14,15 +14,18 @@ public class RapidIRC extends JavaPlugin {
 	public static String channel;
 	public static String server;
 	public static String nick;
+	public static String quitReason;
 
 	public void loadConfiguration() {
 		getConfig().addDefault("Username", "RapidIRC");
 		getConfig().addDefault("Server", "irc.esper.net");
 		getConfig().addDefault("Channel", "#rapidcraft");
+		getConfig().addDefault("Quit Reason", "Server shutting down.");
 		getConfig().options().copyDefaults(true);
 		nick = getConfig().getString("Username");
 		server = getConfig().getString("Server");
 		channel = getConfig().getString("Channel");
+		quitReason = getConfig().getString("Quit Reason");
 		saveConfig();
 	}
 
@@ -34,6 +37,7 @@ public class RapidIRC extends JavaPlugin {
 	}
 
 	public void onDisable() {
+		bot.quitServer(quitReason);
 		bot.disconnect();
 	}
 
@@ -62,14 +66,18 @@ public class RapidIRC extends JavaPlugin {
 			// irc commands
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("imsg")) {
-			String msg = "";
-			for (String word : args) {
-				msg += word + " ";
+			if (args.length > 0) {
+				String msg = "";
+				for (String word : args) {
+					msg += word + " ";
+				}
+				String target = args[0];
+				msg = msg.replace(args[0] + " ", "");
+				bot.sendPrivateMessage(target, sender.getName(), msg);
+				return true;
+			} else {
+				return false;
 			}
-			String target = args[0];
-			msg = msg.replace(args[0] + " ", "");
-			bot.sendPrivateMessage(target, sender.getName(), msg);
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
 			return true;
 		}
@@ -78,9 +86,5 @@ public class RapidIRC extends JavaPlugin {
 
 	public void setBot(Connector bot) {
 		RapidIRC.bot = bot;
-	}
-	
-	public void ircToMcChat(String chat) {
-		
 	}
 }
