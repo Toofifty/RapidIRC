@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
+import org.jibble.pircbot.User;
 
 public class RapidIRC extends JavaPlugin {
 
@@ -63,10 +64,23 @@ public class RapidIRC extends JavaPlugin {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("irc")) {
-			// irc commands
+			if (!(args.length < 1)) {
+				if (args[0].equalsIgnoreCase("list")) {
+					User[] list = bot.getUsers(channel);
+					String ulist = "";
+					for (User user : list) {
+						ulist += user.getNick() + " ";
+					}
+					sender.sendMessage("Users currently in IRC: " + ulist);
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("imsg")) {
-			if (args.length > 0) {
+			if (args.length > 1) {
 				String msg = "";
 				for (String word : args) {
 					msg += word + " ";
@@ -74,10 +88,10 @@ public class RapidIRC extends JavaPlugin {
 				String target = args[0];
 				msg = msg.replace(args[0] + " ", "");
 				bot.sendPrivateMessage(target, sender.getName(), msg);
-				return true;
 			} else {
 				return false;
 			}
+			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
 			return true;
 		}

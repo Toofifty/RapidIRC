@@ -15,7 +15,11 @@ public class Connector extends PircBot {
 	}
 
 	public void sendPrivateMessage(String user, String sender, String msg) {
-		sendMessage(user, sender + " whispers " + ColorMap.toIrc(msg));
+		if (user.equals("Oracle")) {
+			sendMessage(user, "<" + sender + "> " + ColorMap.toIrc(msg));
+		} else {
+			sendMessage(user, sender + " whispers " + ColorMap.toIrc(msg));
+		}
 		Bukkit.getPlayer(sender).sendMessage("[" + sender + "->" + user + "(IRC)] " + msg);
 	}
 
