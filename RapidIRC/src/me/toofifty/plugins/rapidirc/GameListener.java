@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class GameListener implements Listener {
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getJoinMessage()));
@@ -23,10 +23,12 @@ public class GameListener implements Listener {
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		if (event.getPlayer().hasPermission("rapidtools.chatcolors"))
-		event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
-		RapidIRC.bot.sendIRCMessage("<" + event.getPlayer().getDisplayName() + "> " + event.getMessage());
+			event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+		if (!RapidIRC.ignoreMinecraft.contains(event.getPlayer().getDisplayName())) {
+			RapidIRC.bot.sendIRCMessage("<" + event.getPlayer().getDisplayName() + "> " + event.getMessage());
+		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		RapidIRC.bot.sendIRCMessage(event.getDeathMessage());

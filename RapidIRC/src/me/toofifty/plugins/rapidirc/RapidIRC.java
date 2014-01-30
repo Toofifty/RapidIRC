@@ -1,6 +1,8 @@
 package me.toofifty.plugins.rapidirc;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,12 +18,16 @@ public class RapidIRC extends JavaPlugin {
 	public static String server;
 	public static String nick;
 	public static String quitReason;
+	public static List<String> ignoreMinecraft;
+	public static List<String> ignoreIRC;
 
 	public void loadConfiguration() {
 		getConfig().addDefault("Username", "RapidIRC");
 		getConfig().addDefault("Server", "irc.esper.net");
 		getConfig().addDefault("Channel", "#rapidcraft");
 		getConfig().addDefault("Quit Reason", "Server shutting down.");
+		getConfig().addDefault("UserIgnore.Minecraft", Arrays.asList("Example"));
+		getConfig().addDefault("UserIgnore.IRC", Arrays.asList("Example"));
 		getConfig().options().copyDefaults(true);
 		nick = getConfig().getString("Username");
 		server = getConfig().getString("Server");
@@ -33,6 +39,8 @@ public class RapidIRC extends JavaPlugin {
 	public void onEnable() {
 		loadConfiguration();
 		getServer().getPluginManager().registerEvents(new GameListener(), this);
+		ignoreMinecraft = getConfig().getStringList("UserIgnore.Minecraft");
+		ignoreIRC = getConfig().getStringList("UserIgnore.IRC");
 		this.setBot(new Connector());
 		createBot();
 	}
@@ -67,7 +75,7 @@ public class RapidIRC extends JavaPlugin {
 			if (!(args.length < 1)) {
 				if (args[0].equalsIgnoreCase("list")) {
 					User[] list = bot.getUsers(channel);
-					String ulist = "";
+					String ulist = null;
 					for (User user : list) {
 						ulist += user.getNick() + " ";
 					}
@@ -81,7 +89,7 @@ public class RapidIRC extends JavaPlugin {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("imsg")) {
 			if (args.length > 1) {
-				String msg = "";
+				String msg = null;
 				for (String word : args) {
 					msg += word + " ";
 				}
@@ -93,7 +101,7 @@ public class RapidIRC extends JavaPlugin {
 			}
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
-			return true;
+			return false;
 		}
 		return false;
 	}

@@ -28,9 +28,10 @@ permissions:
     rapidirc.*:
         description: Gives access to all commands
         children:
-            rapidirc.irc
-            rapidirc.imsg
-            rapidirc.ircop
+            rapidirc.irc: true
+            rapidirc.imsg: true
+            rapidirc.ircop: true
+            rapidirc.chatcolors: true
     rapidirc.irc:
         description: Basic RapidIRC commands
         default: op

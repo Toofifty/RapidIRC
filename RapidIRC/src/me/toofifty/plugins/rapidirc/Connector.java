@@ -3,9 +3,10 @@ package me.toofifty.plugins.rapidirc;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.jibble.pircbot.*;
+import org.jibble.pircbot.PircBot;
 
 public class Connector extends PircBot {
+
 	public void makeBot(String name) {
 		setName(name);
 	}
@@ -24,7 +25,9 @@ public class Connector extends PircBot {
 	}
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
-		Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
+		if (!RapidIRC.ignoreIRC.contains(sender)) {
+			Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
+		}
 	}
 
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {
