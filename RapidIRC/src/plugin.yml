@@ -40,3 +40,6 @@ permissions:
     rapidirc.ircop:
         description: OP RapidIRC commands
         default: op
+    rapidirc.chatcolors:
+        description: Allows use of chat colors
+        default: op

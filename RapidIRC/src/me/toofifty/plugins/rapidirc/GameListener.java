@@ -22,6 +22,8 @@ public class GameListener implements Listener {
 
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
+		if (event.getPlayer().hasPermission("rapidtools.chatcolors"))
+		event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 		RapidIRC.bot.sendIRCMessage("<" + event.getPlayer().getDisplayName() + "> " + event.getMessage());
 	}
 	

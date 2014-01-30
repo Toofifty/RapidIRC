@@ -11,23 +11,23 @@ public class Connector extends PircBot {
 	}
 
 	public void sendIRCMessage(String msg) {
-		sendMessage(RapidIRC.channel, ColorMap.toIrc(msg));
+		sendMessage(RapidIRC.channel, ColorMap.minecraftColorstoIRCColors(msg));
 	}
 
 	public void sendPrivateMessage(String user, String sender, String msg) {
 		if (user.equals("Oracle")) {
-			sendMessage(user, "<" + sender + "> " + ColorMap.toIrc(msg));
+			sendMessage(user, "<" + sender + "> " + ColorMap.minecraftColorstoIRCColors(msg));
 		} else {
-			sendMessage(user, sender + " whispers " + ColorMap.toIrc(msg));
+			sendMessage(user, sender + " whispers " + ColorMap.minecraftColorstoIRCColors(msg));
 		}
 		Bukkit.getPlayer(sender).sendMessage("[" + sender + "->" + user + "(IRC)] " + msg);
 	}
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
-		Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.fromIrc(message));
+		Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 	}
-	
-	public void onPrivateMessage(String sender, String login, String hostname, String message) {		
+
+	public void onPrivateMessage(String sender, String login, String hostname, String message) {
 		Boolean done = false;
 		String[] words = message.split("[[ ]*|[,]*|[\\.]*|[:]*|[/]*|[!]*|[?]*|[+]*]+");
 		Player p = Bukkit.getPlayer(words[0]);
@@ -37,22 +37,22 @@ public class Connector extends PircBot {
 				p.sendMessage("[IRC]-" + sender + "- " + message);
 				p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
 			} else {
-				p.sendMessage("- " + ColorMap.fromIrc(message));
+				p.sendMessage("- " + ColorMap.ircColorsToMinecraftColors(message));
 			}
 			done = true;
 		}
 		if (!done) {
 			sendMessage(sender, "Message not received by " + words[0] + ".");
 		} else {
-			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.toIrc(message));
+			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.minecraftColorstoIRCColors(message));
 		}
 	}
 
 	public void onJoin(String channel, String sender, String login, String hostname) {
 		Bukkit.broadcastMessage("[IRC] " + login + " has joined");
 	}
-	
-	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason)  {
+
+	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
 		Bukkit.broadcastMessage("[IRC] " + sourceLogin + " has left (" + reason + ")");
 	}
 }
