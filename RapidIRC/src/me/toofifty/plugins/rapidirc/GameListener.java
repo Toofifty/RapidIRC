@@ -2,6 +2,7 @@ package me.toofifty.plugins.rapidirc;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -20,7 +21,7 @@ public class GameListener implements Listener {
 		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getQuitMessage()));
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		if (event.getPlayer().hasPermission("rapidtools.chatcolors"))
 			event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));

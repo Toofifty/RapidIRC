@@ -1,14 +1,35 @@
 package me.toofifty.plugins.rapidirc;
 
+import java.io.IOException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.jibble.pircbot.IrcException;
+import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
 
 public class Connector extends PircBot {
 
-	public void makeBot(String name) {
-		setName(name);
+	public void createBot() {
+		try {
+			setVerbose(true);
+			setName(RapidIRC.nick);
+			connect(RapidIRC.server);
+			if (RapidIRC.nickservPassword != null) {
+				identify(RapidIRC.nickservPassword);
+			}
+			joinChannel(RapidIRC.channel);
+		} catch (NickAlreadyInUseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IrcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void sendIRCMessage(String msg) {
@@ -52,10 +73,14 @@ public class Connector extends PircBot {
 	}
 
 	public void onJoin(String channel, String sender, String login, String hostname) {
-		Bukkit.broadcastMessage("[IRC] " + login + " has joined");
+		Bukkit.broadcastMessage("[IRC] " + sender + " has joined");
 	}
 
 	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
-		Bukkit.broadcastMessage("[IRC] " + sourceLogin + " has left (" + reason + ")");
+		Bukkit.broadcastMessage("[IRC] " + sourceNick + " has quit (" + reason + ")");
+	}
+	
+	public void onPart(String channel, String sender, String login, String hostname) {
+		Bukkit.broadcastMessage("[IRC] " + sender + " has left");
 	}
 }
