@@ -2,6 +2,7 @@ package me.toofifty.plugins.rapidirc;
 
 import java.io.IOException;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -47,6 +48,9 @@ public class Connector extends PircBot {
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (!RapidIRC.ignoreIRC.contains(sender)) {
+			if (message.equals("~players")) {
+				sendIRCMessage("Online Players: " + StringUtils.join(Bukkit.getOnlinePlayers(), ", "));
+			}
 			Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 		}
 	}

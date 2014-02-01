@@ -10,7 +10,7 @@ version: 0.2
 commands:
     irc:
         description: Basic RapidIRC commands
-        usage: /irc
+        usage: /irc [list]
         permission: rapidirc.irc
         permission-message: You don't have permission for that.
     imsg:
