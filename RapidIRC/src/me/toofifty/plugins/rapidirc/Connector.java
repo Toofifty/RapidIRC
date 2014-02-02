@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jibble.pircbot.IrcException;
@@ -52,7 +53,15 @@ public class Connector extends PircBot {
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (!RapidIRC.ignoreIRC.contains(sender)) {
 			String[] args = message.split(" ");
-			if (args[0].equalsIgnoreCase("~players")) {
+			if (args[0].equalsIgnoreCase("~help")) {
+				User user = getUser(channel, sender);
+				if (user.isOp()) {
+					sendMessage(sender, "Commands: ~players, ~kick (username) [reason], ~ban (username) [reason], ~pardon (username)");
+				} else {
+					sendMessage(sender, "Commands: ~players");
+				}
+
+			} else if (args[0].equalsIgnoreCase("~players")) {
 				if (Bukkit.getServer().getOnlinePlayers() != null) {
 					List<String> playerList = new ArrayList<String>();
 					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -65,20 +74,81 @@ public class Connector extends PircBot {
 			} else if (args[0].equalsIgnoreCase("~kick")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
-					Player p = Bukkit.getServer().getPlayer(args[1]);
-					if (p.isOnline()) {
-						if (!args[2].isEmpty()) {
-							p.kickPlayer(args[2]);
-							sendIRCMessage(args[1] + " has been kicked. Reason: " + args[2]);
-						} else {
-							p.kickPlayer("Player kicked");
-							sendIRCMessage(args[1] + " has been kicked.");
+					if (args.length > 1) {
+						try {
+							Player p = Bukkit.getServer().getPlayer(args[1]);
+							if (p.isOnline()) {
+								if (!args[2].isEmpty()) {
+									p.kickPlayer(args[2]);
+									sendIRCMessage(args[1] + " has been kicked. Reason: " + args[2]);
+								} else {
+									p.kickPlayer("Player kicked");
+									sendIRCMessage(args[1] + " has been kicked.");
+								}
+							} else {
+								sendIRCMessage("Cannot kick player: Are they online?");
+							}
+						} catch (NullPointerException e) {
+							sendIRCMessage("Player does not exist");
 						}
 					} else {
-						sendIRCMessage("Cannot kick player: Are they online?");
+						sendIRCMessage("Not enough arguments.");
 					}
 				} else {
-					sendMessage(sender, "You don't have permission to do that.");
+					sendMessage(sender, "You must be op to do that.");
+				}
+			} else if (args[0].equalsIgnoreCase("~ban")) {
+				User user = getUser(channel, sender);
+				if (user.isOp()) {
+					if (args.length > 1) {
+						try {
+							Player p = Bukkit.getServer().getPlayer(args[1]);
+							if (!p.isBanned()) {
+								if (!args[2].isEmpty()) {
+									p.setBanned(true);
+									if (p.isOnline()) {
+										p.kickPlayer(args[2]);
+									}
+									sendIRCMessage(args[1] + " has been banned. Reason: " + args[2]);
+								} else {
+									p.setBanned(true);
+									if (p.isOnline()) {
+										p.kickPlayer("Player banned");
+									}
+									sendIRCMessage(args[1] + " has been banned.");
+								}
+							} else {
+								sendIRCMessage(args[1] + " is already banned.");
+							}
+						} catch (NullPointerException e) {
+							sendIRCMessage("Player does not exist");
+						}
+					} else {
+						sendIRCMessage("Not enough arguments.");
+					}
+				} else {
+					sendMessage(sender, "You must be op to do that.");
+				}
+			} else if (args[0].equalsIgnoreCase("~pardon")) {
+				User user = getUser(channel, sender);
+				if (user.isOp()) {
+					if (args.length > 1) {
+						try {
+							OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(args[1]);
+							if (p.isBanned()) {
+								p.setBanned(false);
+								sendIRCMessage(args[1] + " has been pardoned.");
+							} else {
+								sendIRCMessage(args[1] + " is not banned.");
+							}
+						} catch (NullPointerException e) {
+							sendIRCMessage("Player does not exist");
+						}
+					} else {
+						sendIRCMessage("Not enough arguments.");
+					}
+				} else {
+					sendMessage(sender, "You must be op to do that.");
 				}
 			} else {
 				Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
