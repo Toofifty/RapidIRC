@@ -82,7 +82,10 @@ public class RapidIRC extends JavaPlugin {
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
 			if (args[0].equalsIgnoreCase("restart") && args.length == 1) {
-
+				bot.quitServer("Restarting...");
+				bot.disconnect();
+				bot.createBot();
+				return true;
 			} else {
 				return false;
 			}

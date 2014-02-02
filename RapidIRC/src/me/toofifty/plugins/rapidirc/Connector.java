@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
+import org.jibble.pircbot.User;
 
 public class Connector extends PircBot {
 
@@ -50,7 +51,8 @@ public class Connector extends PircBot {
 
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (!RapidIRC.ignoreIRC.contains(sender)) {
-			if (message.equals("~players")) {
+			String[] args = message.split(" ");
+			if (args[0].equalsIgnoreCase("~players")) {
 				if (Bukkit.getServer().getOnlinePlayers() != null) {
 					List<String> playerList = new ArrayList<String>();
 					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -60,8 +62,24 @@ public class Connector extends PircBot {
 				} else {
 					sendIRCMessage("There are no players online.");
 				}
-			} else if (message.equals("~kick")) {
-
+			} else if (args[0].equalsIgnoreCase("~kick")) {
+				User user = getUser(channel, sender);
+				if (user.isOp()) {
+					Player p = Bukkit.getServer().getPlayer(args[1]);
+					if (p.isOnline()) {
+						if (!args[2].isEmpty()) {
+							p.kickPlayer(args[2]);
+							sendIRCMessage(args[1] + " has been kicked. Reason: " + args[2]);
+						} else {
+							p.kickPlayer("Player kicked");
+							sendIRCMessage(args[1] + " has been kicked.");
+						}
+					} else {
+						sendIRCMessage("Cannot kick player: Are they online?");
+					}
+				} else {
+					sendMessage(sender, "You don't have permission to do that.");
+				}
 			} else {
 				Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 			}
@@ -99,5 +117,16 @@ public class Connector extends PircBot {
 
 	public void onPart(String channel, String sender, String login, String hostname) {
 		Bukkit.broadcastMessage("[IRC] " + sender + " has left");
+	}
+
+	public User getUser(String channel, String nickname) {
+		User foundUser = null;
+		for (User user : getUsers(channel)) {
+			if (nickname.equals(user.getNick())) {
+				foundUser = user;
+				break;
+			}
+		}
+		return foundUser;
 	}
 }
