@@ -81,7 +81,11 @@ public class RapidIRC extends JavaPlugin {
 			}
 			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
-			return false;
+			if (args[0].equalsIgnoreCase("restart") && args.length == 1) {
+
+			} else {
+				return false;
+			}
 		}
 		return false;
 	}

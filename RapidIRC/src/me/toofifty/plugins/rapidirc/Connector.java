@@ -1,9 +1,12 @@
 package me.toofifty.plugins.rapidirc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jibble.pircbot.IrcException;
@@ -22,8 +25,7 @@ public class Connector extends PircBot {
 			}
 			joinChannel(RapidIRC.channel);
 		} catch (NickAlreadyInUseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Bukkit.getLogger().warning("The set nickname is already in use, change the nickname and restart the bot.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,9 +51,20 @@ public class Connector extends PircBot {
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (!RapidIRC.ignoreIRC.contains(sender)) {
 			if (message.equals("~players")) {
-				sendIRCMessage("Online Players: " + StringUtils.join(Bukkit.getOnlinePlayers(), ", "));
+				if (Bukkit.getServer().getOnlinePlayers() != null) {
+					List<String> playerList = new ArrayList<String>();
+					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+						playerList.add(p.getPlayerListName() + ChatColor.RESET);
+					}
+					sendIRCMessage("Online Players: " + ColorMap.minecraftColorstoIRCColors(StringUtils.join(playerList, ", ")));
+				} else {
+					sendIRCMessage("There are no players online.");
+				}
+			} else if (message.equals("~kick")) {
+
+			} else {
+				Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 			}
-			Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 		}
 	}
 
@@ -83,7 +96,7 @@ public class Connector extends PircBot {
 	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
 		Bukkit.broadcastMessage("[IRC] " + sourceNick + " has quit (" + reason + ")");
 	}
-	
+
 	public void onPart(String channel, String sender, String login, String hostname) {
 		Bukkit.broadcastMessage("[IRC] " + sender + " has left");
 	}
