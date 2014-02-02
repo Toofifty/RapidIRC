@@ -86,7 +86,8 @@ public class DccManager {
         }
         else if (type.equals("ACCEPT")) {
             int port = Integer.parseInt(tokenizer.nextToken());
-            long progress = Long.parseLong(tokenizer.nextToken());
+            @SuppressWarnings("unused")
+			long progress = Long.parseLong(tokenizer.nextToken());
             
             DccFileTransfer transfer = null;
             synchronized (_awaitingResume) {
@@ -130,7 +131,8 @@ public class DccManager {
      * 
      * @param transfer the DccFileTransfer that may be resumed.
      */
-    void addAwaitingResume(DccFileTransfer transfer) {
+    @SuppressWarnings("unchecked")
+	void addAwaitingResume(DccFileTransfer transfer) {
         synchronized (_awaitingResume) {
             _awaitingResume.addElement(transfer);
         }
@@ -146,6 +148,7 @@ public class DccManager {
     
     
     private PircBot _bot;
-    private Vector _awaitingResume = new Vector();
+    @SuppressWarnings("rawtypes")
+	private Vector _awaitingResume = new Vector();
     
 }

@@ -1110,7 +1110,8 @@ public abstract class PircBot implements ReplyConstants {
      * @param code The three-digit numerical code for the response.
      * @param response The full response from the IRC server.
      */
-    private final void processServerResponse(int code, String response) {
+    @SuppressWarnings("unchecked")
+	private final void processServerResponse(int code, String response) {
         
         if (code == RPL_LIST) {
             // This is a bit of information about a channel.
@@ -2842,7 +2843,8 @@ public abstract class PircBot implements ReplyConstants {
      * 
      * @see #onUserList(String,User[]) onUserList
      */
-    public final User[] getUsers(String channel) {
+    @SuppressWarnings("rawtypes")
+	public final User[] getUsers(String channel) {
         channel = channel.toLowerCase();
         User[] userArray = new User[0];
         synchronized (_channels) {
@@ -2876,7 +2878,8 @@ public abstract class PircBot implements ReplyConstants {
         String[] channels = new String[0];
         synchronized (_channels) {
             channels = new String[_channels.size()];
-            Enumeration enumeration = _channels.keys();
+            @SuppressWarnings("rawtypes")
+			Enumeration enumeration = _channels.keys();
             for (int i = 0; i < channels.length; i++) {
                 channels[i] = (String) enumeration.nextElement();
             }
@@ -2915,7 +2918,8 @@ public abstract class PircBot implements ReplyConstants {
      * Add a user to the specified channel in our memory.
      * Overwrite the existing entry if it exists.
      */
-    private final void addUser(String channel, User user) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private final void addUser(String channel, User user) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
             Hashtable users = (Hashtable) _channels.get(channel);
@@ -2931,7 +2935,8 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Remove a user from the specified channel in our memory.
      */
-    private final User removeUser(String channel, String nick) {
+    @SuppressWarnings("rawtypes")
+	private final User removeUser(String channel, String nick) {
         channel = channel.toLowerCase();
         User user = new User("", nick);
         synchronized (_channels) {
@@ -2947,7 +2952,8 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Remove a user from all channels in our memory.
      */
-    private final void removeUser(String nick) {
+    @SuppressWarnings("rawtypes")
+	private final void removeUser(String nick) {
         synchronized (_channels) {
             Enumeration enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
@@ -2961,7 +2967,8 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Rename a user if they appear in any of the channels we know about.
      */
-    private final void renameUser(String oldNick, String newNick) {
+    @SuppressWarnings("rawtypes")
+	private final void renameUser(String oldNick, String newNick) {
         synchronized (_channels) {
             Enumeration enumeration = _channels.keys();
             while (enumeration.hasMoreElements()) {
@@ -2990,14 +2997,16 @@ public abstract class PircBot implements ReplyConstants {
     /**
      * Removes all channels from our memory of users.
      */
-    private final void removeAllChannels() {
+    @SuppressWarnings("rawtypes")
+	private final void removeAllChannels() {
         synchronized(_channels) {
             _channels = new Hashtable();
         }
     }
 
 
-    private final void updateUser(String channel, int userMode, String nick) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private final void updateUser(String channel, int userMode, String nick) {
         channel = channel.toLowerCase();
         synchronized (_channels) {
             Hashtable users = (Hashtable) _channels.get(channel);
@@ -3071,11 +3080,13 @@ public abstract class PircBot implements ReplyConstants {
     
     // A Hashtable of channels that points to a selfreferential Hashtable of
     // User objects (used to remember which users are in which channels).
-    private Hashtable _channels = new Hashtable();
+    @SuppressWarnings("rawtypes")
+	private Hashtable _channels = new Hashtable();
     
     // A Hashtable to temporarily store channel topics when we join them
     // until we find out who set that topic.
-    private Hashtable _topics = new Hashtable();
+    @SuppressWarnings("rawtypes")
+	private Hashtable _topics = new Hashtable();
     
     // DccManager to process and handle all DCC events.
     private DccManager _dccManager = new DccManager(this);

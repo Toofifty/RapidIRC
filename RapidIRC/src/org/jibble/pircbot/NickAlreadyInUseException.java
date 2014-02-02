@@ -24,6 +24,7 @@ package org.jibble.pircbot;
  *          <a href="http://www.jibble.org/">http://www.jibble.org/</a>
  * @version    1.5.0 (Build time: Mon Dec 14 20:07:17 2009)
  */
+@SuppressWarnings("serial")
 public class NickAlreadyInUseException extends IrcException {
     
     /**
