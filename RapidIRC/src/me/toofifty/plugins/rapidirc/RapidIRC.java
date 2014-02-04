@@ -16,6 +16,7 @@ public class RapidIRC extends JavaPlugin {
 	public static String nick;
 	public static String quitReason;
 	public static String nickservPassword;
+	public static String prefix;
 	public static List<String> ignoreMinecraft;
 	public static List<String> ignoreIRC;
 
@@ -27,11 +28,13 @@ public class RapidIRC extends JavaPlugin {
 		getConfig().addDefault("NickServ Password", null);
 		getConfig().addDefault("UserIgnore.Minecraft", Arrays.asList("Example"));
 		getConfig().addDefault("UserIgnore.IRC", Arrays.asList("Example"));
+		getConfig().addDefault("Command prefix", "~");
 		getConfig().options().copyDefaults(true);
 		nick = getConfig().getString("Username");
 		server = getConfig().getString("Server");
 		channel = getConfig().getString("Channel");
 		quitReason = getConfig().getString("Quit Reason");
+		prefix = getConfig().getString("Command prefix");
 		nickservPassword = getConfig().getString("NickServ Password");
 		ignoreMinecraft = getConfig().getStringList("UserIgnore.Minecraft");
 		ignoreIRC = getConfig().getStringList("UserIgnore.IRC");

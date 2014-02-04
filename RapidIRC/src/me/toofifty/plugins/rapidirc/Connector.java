@@ -29,10 +29,8 @@ public class Connector extends PircBot {
 		} catch (NickAlreadyInUseException e) {
 			Bukkit.getLogger().warning("The set nickname is already in use, change the nickname and restart the bot.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IrcException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -53,15 +51,15 @@ public class Connector extends PircBot {
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (!RapidIRC.ignoreIRC.contains(sender)) {
 			String[] args = message.split(" ");
-			if (args[0].equalsIgnoreCase("~help")) {
+			if (args[0].equalsIgnoreCase(RapidIRC.prefix + "help")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
-					sendMessage(sender, "Commands: ~players, ~kick (username) [reason], ~ban (username) [reason], ~pardon (username)");
+					sendMessage(sender, "Commands: " + RapidIRC.prefix + "players, " + RapidIRC.prefix + "kick [username] (reason), " + RapidIRC.prefix + "ban [username] (reason), " + RapidIRC.prefix + "pardon [username]");
 				} else {
-					sendMessage(sender, "Commands: ~players");
+					sendMessage(sender, "Commands: " + RapidIRC.prefix + "players, " + RapidIRC.prefix + "version");
 				}
 
-			} else if (args[0].equalsIgnoreCase("~players")) {
+			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "players")) {
 				if (Bukkit.getServer().getOnlinePlayers() != null) {
 					List<String> playerList = new ArrayList<String>();
 					for (Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -71,7 +69,9 @@ public class Connector extends PircBot {
 				} else {
 					sendIRCMessage("There are no players online.");
 				}
-			} else if (args[0].equalsIgnoreCase("~kick")) {
+			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "version")) {
+				sendIRCMessage("Version: " + Bukkit.getServer().getPluginManager().getPlugin("RapidIRC").getDescription().getVersion());
+			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "kick")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
 					if (args.length > 1) {
@@ -97,7 +97,7 @@ public class Connector extends PircBot {
 				} else {
 					sendMessage(sender, "You must be op to do that.");
 				}
-			} else if (args[0].equalsIgnoreCase("~ban")) {
+			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "ban")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
 					if (args.length > 1) {
@@ -129,7 +129,7 @@ public class Connector extends PircBot {
 				} else {
 					sendMessage(sender, "You must be op to do that.");
 				}
-			} else if (args[0].equalsIgnoreCase("~pardon")) {
+			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "pardon")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
 					if (args.length > 1) {
