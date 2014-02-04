@@ -179,6 +179,11 @@ public class Connector extends PircBot {
 
 	public void onJoin(String channel, String sender, String login, String hostname) {
 		Bukkit.broadcastMessage("[IRC] " + sender + " has joined");
+		if (Bukkit.getServer().getOnlinePlayers().length > 0) {
+			sendMessage(sender, "There are " + Bukkit.getServer().getOnlinePlayers().length + "players online.");
+		} else {
+			sendMessage(sender, "There are no players online.");
+		}
 	}
 
 	public void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {

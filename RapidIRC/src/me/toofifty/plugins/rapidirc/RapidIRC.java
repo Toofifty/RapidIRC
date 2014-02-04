@@ -3,8 +3,11 @@ package me.toofifty.plugins.rapidirc;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jibble.pircbot.User;
 
@@ -94,5 +97,9 @@ public class RapidIRC extends JavaPlugin {
 			}
 		}
 		return false;
+	}
+	@EventHandler
+	public void onPlayerLogin(PlayerLoginEvent event) {
+		event.getPlayer().sendMessage(ChatColor.GOLD + "There are " + bot.getUsers(channel).length + " people online in IRC.");
 	}
 }
