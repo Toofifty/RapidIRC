@@ -54,7 +54,8 @@ public class Connector extends PircBot {
 			if (args[0].equalsIgnoreCase(RapidIRC.prefix + "help")) {
 				User user = getUser(channel, sender);
 				if (user.isOp()) {
-					sendMessage(sender, "Commands: " + RapidIRC.prefix + "players, " + RapidIRC.prefix + "kick [username] (reason), " + RapidIRC.prefix + "ban [username] (reason), " + RapidIRC.prefix + "pardon [username]");
+					sendMessage(sender, "Commands: " + RapidIRC.prefix + "players, " + RapidIRC.prefix + "kick [username] (reason), " + RapidIRC.prefix
+							+ "ban [username] (reason), " + RapidIRC.prefix + "pardon [username]");
 				} else {
 					sendMessage(sender, "Commands: " + RapidIRC.prefix + "players, " + RapidIRC.prefix + "version");
 				}
@@ -66,123 +67,125 @@ public class Connector extends PircBot {
 						playerList.add(p.getPlayerListName() + ChatColor.RESET);
 					}
 					sendIRCMessage("Online Players: " + ColorMap.minecraftColorstoIRCColors(StringUtils.join(playerList, ", ")));
-				} else {
-					sendIRCMessage("There are no players online.");
-				}
-			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "version")) {
-				sendIRCMessage("Version: " + Bukkit.getServer().getPluginManager().getPlugin("RapidIRC").getDescription().getVersion());
-			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "kick")) {
-				User user = getUser(channel, sender);
-				if (user.isOp()) {
-					if (args.length > 1) {
-						try {
-							Player p = Bukkit.getServer().getPlayer(args[1]);
-							if (p.isOnline()) {
-								if (!args[2].isEmpty()) {
-									p.kickPlayer(args[2]);
-									sendIRCMessage(args[1] + " has been kicked. Reason: " + args[2]);
-								} else {
-									p.kickPlayer("Player kicked");
-									sendIRCMessage(args[1] + " has been kicked.");
-								}
-							} else {
-								sendIRCMessage("Cannot kick player: Are they online?");
-							}
-						} catch (NullPointerException e) {
-							sendIRCMessage("Player does not exist");
-						}
-					} else {
-						sendIRCMessage("Not enough arguments.");
-					}
-				} else {
-					sendMessage(sender, "You must be op to do that.");
-				}
-			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "ban")) {
-				User user = getUser(channel, sender);
-				if (user.isOp()) {
-					if (args.length > 1) {
-						try {
-							Player p = Bukkit.getServer().getPlayer(args[1]);
-							if (!p.isBanned()) {
-								if (!args[2].isEmpty()) {
-									p.setBanned(true);
-									if (p.isOnline()) {
+				} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "version")) {
+					sendIRCMessage("Version: " + Bukkit.getServer().getPluginManager().getPlugin("RapidIRC").getDescription().getVersion());
+				} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "kick")) {
+					User user = getUser(channel, sender);
+					if (user.isOp()) {
+						if (args.length > 1) {
+							try {
+								Player p = Bukkit.getServer().getPlayer(args[1]);
+								if (p.isOnline()) {
+									if (!args[2].isEmpty()) {
 										p.kickPlayer(args[2]);
+										sendIRCMessage(args[1] + " has been kicked. Reason: " + args[2]);
+									} else {
+										p.kickPlayer("Player kicked");
+										sendIRCMessage(args[1] + " has been kicked.");
 									}
-									sendIRCMessage(args[1] + " has been banned. Reason: " + args[2]);
 								} else {
-									p.setBanned(true);
-									if (p.isOnline()) {
-										p.kickPlayer("Player banned");
-									}
-									sendIRCMessage(args[1] + " has been banned.");
+									sendIRCMessage("Cannot kick player: Are they online?");
 								}
-							} else {
-								sendIRCMessage(args[1] + " is already banned.");
+							} catch (NullPointerException e) {
+								sendIRCMessage("Player does not exist");
 							}
-						} catch (NullPointerException e) {
-							sendIRCMessage("Player does not exist");
+						} else {
+							sendIRCMessage("Not enough arguments.");
 						}
 					} else {
-						sendIRCMessage("Not enough arguments.");
+						sendMessage(sender, "You must be op to do that.");
 					}
-				} else {
-					sendMessage(sender, "You must be op to do that.");
-				}
-			} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "pardon")) {
-				User user = getUser(channel, sender);
-				if (user.isOp()) {
-					if (args.length > 1) {
-						try {
-							OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(args[1]);
-							if (p.isBanned()) {
-								p.setBanned(false);
-								sendIRCMessage(args[1] + " has been pardoned.");
-							} else {
-								sendIRCMessage(args[1] + " is not banned.");
+				} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "ban")) {
+					User user = getUser(channel, sender);
+					if (user.isOp()) {
+						if (args.length > 1) {
+							try {
+								Player p = Bukkit.getServer().getPlayer(args[1]);
+								if (!p.isBanned()) {
+									if (!args[2].isEmpty()) {
+										p.setBanned(true);
+										if (p.isOnline()) {
+											p.kickPlayer(args[2]);
+										}
+										sendIRCMessage(args[1] + " has been banned. Reason: " + args[2]);
+									} else {
+										p.setBanned(true);
+										if (p.isOnline()) {
+											p.kickPlayer("Player banned");
+										}
+										sendIRCMessage(args[1] + " has been banned.");
+									}
+								} else {
+									sendIRCMessage(args[1] + " is already banned.");
+								}
+							} catch (NullPointerException e) {
+								sendIRCMessage("Player does not exist");
 							}
-						} catch (NullPointerException e) {
-							sendIRCMessage("Player does not exist");
+						} else {
+							sendIRCMessage("Not enough arguments.");
 						}
 					} else {
-						sendIRCMessage("Not enough arguments.");
+						sendMessage(sender, "You must be op to do that.");
+					}
+				} else if (args[0].equalsIgnoreCase(RapidIRC.prefix + "pardon")) {
+					User user = getUser(channel, sender);
+					if (user.isOp()) {
+						if (args.length > 1) {
+							try {
+								OfflinePlayer p = Bukkit.getServer().getOfflinePlayer(args[1]);
+								if (p.isBanned()) {
+									p.setBanned(false);
+									sendIRCMessage(args[1] + " has been pardoned.");
+								} else {
+									sendIRCMessage(args[1] + " is not banned.");
+								}
+							} catch (NullPointerException e) {
+								sendIRCMessage("Player does not exist");
+							}
+						} else {
+							sendIRCMessage("Not enough arguments.");
+						}
+					} else {
+						sendMessage(sender, "You must be op to do that.");
 					}
 				} else {
-					sendMessage(sender, "You must be op to do that.");
+					Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 				}
-			} else {
-				Bukkit.broadcastMessage("[IRC] <" + sender + "> " + ColorMap.ircColorsToMinecraftColors(message));
 			}
 		}
 	}
 
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {
-		Boolean done = false;
-		String[] words = message.split("[[ ]*|[,]*|[\\.]*|[:]*|[/]*|[!]*|[?]*|[+]*]+");
-		Player p = Bukkit.getPlayer(words[0]);
-		if (p != null) {
-			message = message.replace(words[0] + " ", "");
-			if (!sender.equals("Oracle")) {
-				p.sendMessage("[IRC]-" + sender + "- " + message);
-				p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
-			} else {
-				p.sendMessage("- " + ColorMap.ircColorsToMinecraftColors(message));
+		if (!sender.equals(getNick())) {
+			Boolean done = false;
+			String[] words = message.split("[[ ]*|[,]*|[\\.]*|[:]*|[/]*|[!]*|[?]*|[+]*]+");
+			Player p = Bukkit.getPlayer(words[0]);
+			if (p != null) {
+				message = message.replace(words[0] + " ", "");
+				if (!sender.equals("Oracle")) {
+					p.sendMessage("[IRC]-" + sender + "- " + message);
+					p.getWorld().playSound(p.getLocation(), Sound.CAT_MEOW, 1, 0);
+				} else {
+					p.sendMessage("- " + ColorMap.ircColorsToMinecraftColors(message));
+				}
+				done = true;
 			}
-			done = true;
-		}
-		if (!done) {
-			sendMessage(sender, "Message not received by " + words[0] + ".");
-		} else {
-			sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.minecraftColorstoIRCColors(message));
+			if (!done) {
+				sendMessage(sender, "Message not received by " + words[0] + ".");
+			} else {
+				sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.minecraftColorstoIRCColors(message));
+			}
 		}
 	}
 
 	public void onJoin(String channel, String sender, String login, String hostname) {
-		Bukkit.broadcastMessage("[IRC] " + sender + " has joined");
-		if (Bukkit.getServer().getOnlinePlayers().length > 0) {
-			sendMessage(sender, "There are " + Bukkit.getServer().getOnlinePlayers().length + "players online.");
-		} else {
-			sendMessage(sender, "There are no players online.");
+		if (!sender.equals(getNick())) {
+			Bukkit.broadcastMessage("[IRC] " + sender + " has joined");
+			if (Bukkit.getServer().getOnlinePlayers().length > 0) {
+				sendNotice(sender, "There are " + Bukkit.getServer().getOnlinePlayers().length + " players online.");
+			} else {
+				sendNotice(sender, "There are no players online.");
+			}
 		}
 	}
 

@@ -3,11 +3,8 @@ package me.toofifty.plugins.rapidirc;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jibble.pircbot.User;
 
@@ -56,9 +53,22 @@ public class RapidIRC extends JavaPlugin {
 		bot.disconnect();
 	}
 
+	public void startBot() {
+		bot = new Connector();
+		bot.createBot();
+	}
+
+	public void stopBot(String reason) {
+		bot.partChannel(channel, reason);
+		bot.quitServer(reason);
+		bot.disconnect();
+		bot = null;
+	}
+
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("irc")) {
-			if (!(args.length < 1)) {
+			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("list")) {
 					User[] list = bot.getUsers(channel);
 					String ulist = "";
@@ -66,13 +76,13 @@ public class RapidIRC extends JavaPlugin {
 						ulist += user.getNick() + " ";
 					}
 					sender.sendMessage("Users currently in IRC: " + ulist);
+					return true;
 				} else {
 					return false;
 				}
 			} else {
 				return false;
 			}
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("imsg")) {
 			if (args.length > 1) {
 				String msg = "";
@@ -82,24 +92,42 @@ public class RapidIRC extends JavaPlugin {
 				String target = args[0];
 				msg = msg.replace(args[0] + " ", "");
 				bot.sendPrivateMessage(target, sender.getName(), msg);
+				return true;
 			} else {
 				return false;
 			}
-			return true;
 		} else if (cmd.getName().equalsIgnoreCase("ircop")) {
-			if (args[0].equalsIgnoreCase("restart") && args.length == 1) {
-				bot.quitServer("Restarting...");
-				bot.disconnect();
-				bot.createBot();
+			if (args.length < 1) {
+				return false;
+			} else if (args[0].equalsIgnoreCase("restart")) {
+				stopBot("Restarting...");
+				startBot();
 				return true;
+			} else if (args[0].equalsIgnoreCase("stop")) {
+				if (bot != null) {
+					if (args.length == 2) {
+						stopBot(args[1]);
+						return true;
+					} else {
+						stopBot("Stopping server");
+						return true;
+					}
+				} else {
+					sender.sendMessage("Bot is not running.");
+					return true;
+				}
+			} else if (args[0].equalsIgnoreCase("start") && args.length == 1) {
+				if (bot == null) {
+					startBot();
+					return true;
+				} else {
+					sender.sendMessage("Bot is already running.");
+					return true;
+				}
 			} else {
 				return false;
 			}
 		}
 		return false;
-	}
-	@EventHandler
-	public void onPlayerLogin(PlayerLoginEvent event) {
-		event.getPlayer().sendMessage(ChatColor.GOLD + "There are " + bot.getUsers(channel).length + " people online in IRC.");
 	}
 }

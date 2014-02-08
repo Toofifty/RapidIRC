@@ -20,7 +20,7 @@ commands:
         permission-message: You don't have permission for that.
     ircop:
         description: OP RapidIRC commands
-        usage: /ircop
+        usage: /ircop [start|stop|restart]
         permission: rapidirc.ircop
         permission-message: You don't have permission for that.
         
