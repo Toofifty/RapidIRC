@@ -5,7 +5,7 @@ main: me.toofifty.plugins.rapidirc.RapidIRC
 name: RapidIRC
 startup: startup
 url: http://rapidcraftmc.com/
-version: 0.3
+version: 0.4
 
 commands:
     irc:
