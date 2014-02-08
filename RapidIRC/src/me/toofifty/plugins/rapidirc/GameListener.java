@@ -16,7 +16,7 @@ public class GameListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getJoinMessage()));
 		Player p = event.getPlayer();
-		p.sendMessage(ChatColor.GREEN + "There are " + RapidIRC.bot.getUsers(RapidIRC.channel).length + " people online in IRC.");
+		p.sendMessage(ChatColor.GREEN + "There are " + (RapidIRC.bot.getUsers(RapidIRC.channel).length - 1) + " people online in IRC.");
 	}
 
 	@EventHandler
@@ -24,7 +24,7 @@ public class GameListener implements Listener {
 		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getQuitMessage()));
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
 		if (event.getPlayer().hasPermission("rapidtools.chatcolors"))
 			event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
