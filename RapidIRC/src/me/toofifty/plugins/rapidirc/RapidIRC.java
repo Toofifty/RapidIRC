@@ -43,7 +43,7 @@ public class RapidIRC extends JavaPlugin {
 
 	public void onEnable() {
 		loadConfiguration();
-		getServer().getPluginManager().registerEvents(new GameListener(), this);
+		getServer().getPluginManager().registerEvents(new GameListener(ignoreIRC), this);
 		bot = new Connector();
 		bot.createBot();
 	}

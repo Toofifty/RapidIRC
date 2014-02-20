@@ -3,25 +3,37 @@ package me.toofifty.plugins.rapidirc;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jibble.pircbot.User;
 
 public class GameListener implements Listener {
+	private java.util.List<String> ignoreIRC;
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	public GameListener(java.util.List<String> ignoreIRC) {
+		this.ignoreIRC = ignoreIRC;
+	}
+
+	
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getJoinMessage()));
+		RapidIRC.bot.sendIRCMessage(event.getJoinMessage());
 		Player p = event.getPlayer();
-		p.sendMessage(ChatColor.GREEN + "There are " + (RapidIRC.bot.getUsers(RapidIRC.channel).length - 1) + " people online in IRC.");
+		int numberOfIRCUsers = RapidIRC.bot.getUsers(RapidIRC.channel).length;
+		for (User user : RapidIRC.bot.getUsers(RapidIRC.channel)) {
+			if(ignoreIRC.contains(user.getNick())) {
+				numberOfIRCUsers =- 1;
+			}
+		}
+		p.sendMessage(ChatColor.GREEN + "There are " + numberOfIRCUsers + " people online in IRC.");
 	}
 
 	@EventHandler
 	public void onPlayerDisconnect(PlayerQuitEvent event) {
-		RapidIRC.bot.sendIRCMessage(ChatColor.stripColor(event.getQuitMessage()));
+		RapidIRC.bot.sendIRCMessage(event.getQuitMessage());
 	}
 
 	@EventHandler
