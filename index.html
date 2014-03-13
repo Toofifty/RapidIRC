@@ -76,10 +76,55 @@
 
 <p>Return a list of players online (on both worlds)</p>
 
-<hr><p>Note: if you receive strange messages beginning with just <code>-</code> then you have been private messaged by the IRC maintenance bot, Oracle. <a href="Oracle">You can see what functions Oracle has here.</a></p>
+<pre><code>~version
+</code></pre>
+
+<p>Return the version of the RapidIRC plugin</p>
+
+<hr><p>Note: if you receive strange messages beginning with just <code>-</code> then you have been private messaged by the IRC maintenance bot, Oracle. <a href="http://toofifty.github.io/Oracle">You can see what functions Oracle has here.</a></p>
 
 <hr><h1>
 <a name="administration" class="anchor" href="#administration"><span class="octicon octicon-link"></span></a>Administration</h1>
+
+<hr><h3>
+<a name="in-game" class="anchor" href="#in-game"><span class="octicon octicon-link"></span></a>In-game</h3>
+
+<p>Along with the in-game commands, there are a few commands that may need to be used from time to time. They can be accessed through the /ircOP command.
+These include:</p>
+
+<pre><code>/ircop start
+/ircop restart
+/ircop stop
+</code></pre>
+
+<p>These commands are extremely self-explanatory, and don't need much further elaboration.</p>
+
+<hr><h3>
+<a name="in-irc" class="anchor" href="#in-irc"><span class="octicon octicon-link"></span></a>In IRC</h3>
+
+<p>There are extra administrative commands that can perform actions in-game. </p>
+
+<pre><code>~kick
+</code></pre>
+
+<p>Kick a user from the IRC channel (Requires OP in IRC)</p>
+
+<pre><code>~ban
+</code></pre>
+
+<p>Ban a user from the IRC channel (Requires OP in IRC)</p>
+
+<pre><code>~pardon
+</code></pre>
+
+<p>Un-ban/pardon a user from the IRC channel, allowing them to return (Requires OP in IRC)</p>
+
+<hr><h2>
+<a name="development--plugin-administration" class="anchor" href="#development--plugin-administration"><span class="octicon octicon-link"></span></a>Development / Plugin Administration</h2>
+
+<hr><p>The plugin should create a config file in it's own folder the first time it is run with Bukkit. Within this file, the variables for the bots are stored and can be changed. Username, channel and server can be edited, along with a few other fields.</p>
+
+<hr><p>That's all you need to know about RapidIRC. Check out the <a href="http://toofifty.github.io/Oracle">Oracle bot</a> to see what functions and features it provides on the other end.</p>
       </section>
     </div>
 
