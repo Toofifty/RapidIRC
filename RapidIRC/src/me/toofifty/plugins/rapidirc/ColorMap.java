@@ -26,6 +26,10 @@ public final class ColorMap {
 		s = s.replace(Colors.UNDERLINE, ChatColor.UNDERLINE.toString());
 		s = s.replace(Colors.WHITE, ChatColor.WHITE.toString());
 		s = s.replace(Colors.YELLOW, ChatColor.YELLOW.toString());
+		
+		s = s.replace("\t", "    "); // fixes tab chars
+		s = s.replace("\x1D", ""); // fixes italics chars
+		
 		s = Colors.removeFormattingAndColors(s); // catch any stragglers
 		return s;
 	}
