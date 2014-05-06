@@ -173,7 +173,7 @@ public class Connector extends PircBot {
 			}
 			if (!done) {
 				sendMessage(sender, "Message not received by " + words[0] + ".");
-			} else {
+			} else if (!sender.equals("Oracle") {
 				sendMessage(sender, "[" + sender + "(IRC)->" + words[0] + "] " + ColorMap.minecraftColorstoIRCColors(message));
 			}
 		}
